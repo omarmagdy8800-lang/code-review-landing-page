@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>عمر مجدي - AI Code Review</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Cairo:wght@300;400;600;700;900&display=swap" rel="stylesheet">
+
+<style>
+:root {
+  --bg: #050810;
+  --card: #0a0f1e;
+  --accent: #00f5d4;
+  --accent2: #7b2fff;
+  --text: #e0e6ff;
+  --muted: #4a5580;
+  --border: #1a2040;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Cairo', sans-serif;
+}
+
+/* NAV */
+nav {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  background: rgba(5,8,16,0.8);
+  backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--border);
+}
+
+.nav-logo {
+  font-family: 'Space Mono', monospace;
+  color: var(--accent);
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--muted);
+  cursor: pointer;
+  text-decoration: none;
+}
+
+/* HERO */
+.hero {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.hero h1 {
+  font-size: 60px;
+}
+
+.hero span {
+  color: var(--accent);
+}
+
+.btn {
+  padding: 12px 25px;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-top: 15px;
+  background: linear-gradient(135deg,var(--accent),var(--accent2));
+  color: black;
+  font-weight: bold;
+}
+
+/* SECTIONS */
+.section {
+  padding: 80px 20px;
+}
+
+.container {
+  max-width: 900px;
+  margin: auto;
+}
+
+.section-title {
+  font-size: 30px;
+  margin-bottom: 20px;
+}
+
+/* CARDS */
+.card {
+  background: var(--card);
+  padding: 20px;
+  border-radius: 15px;
+  border: 1px solid var(--border);
+}
+
+/* FORM */
+textarea, input {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  background: #0f172a;
+  border: 1px solid var(--border);
+  color: white;
+  border-radius: 10px;
+}
+
+button {
+  margin-top: 10px;
+}
+
+/* OUTPUT */
+#output {
+  margin-top: 20px;
+  padding: 15px;
+  background: #111827;
+  border-radius: 10px;
+}
+
+</style>
+</head>
+
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">&lt;omar.dev/&gt;</div>
+  <ul class="nav-links">
+    <li><a onclick="goTo('home')">Home</a></li>
+    <li><a onclick="goTo('ai')">AI Tool</a></li>
+    <li><a onclick="goTo('contact')">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero" id="home">
+  <div>
+    <h1>AI <span>Code Review</span> System</h1>
+    <p>Smart simulation for analyzing your code</p>
+    <button class="btn" onclick="goTo('ai')">Try AI Tool</button>
+  </div>
+</section>
+
+<!-- AI SECTION -->
+<section class="section" id="ai">
+  <div class="container card">
+    <h2 class="section-title">🤖 AI Code Analyzer</h2>
+
+    <textarea id="codeInput" placeholder="Paste your code here..."></textarea>
+
+    <button class="btn" onclick="analyzeCode()">Analyze Code</button>
+
+    <div id="loading" style="display:none;margin-top:10px;color:#00f5d4;">
+      🤖 AI is analyzing...
+    </div>
+
+    <div id="output"></div>
+  </div>
+</section>
+
+<!-- CONTACT -->
+<section class="section" id="contact">
+  <div class="container card">
+    <h2 class="section-title">Contact Me</h2>
+
+    <input id="userName" placeholder="Your Name">
+    <textarea id="userMessage" placeholder="Your Message"></textarea>
+
+    <button class="btn" onclick="sendWhatsApp()">Send WhatsApp</button>
+  </div>
+</section>
+
+<script>
+
+function goTo(id){
+  document.getElementById(id).scrollIntoView({behavior:'smooth'});
+}
+
+/* AI ENGINE */
+function analyzeCode(){
+  document.getElementById("loading").style.display = "block";
+
+  setTimeout(() => {
+
+    let code = document.getElementById("codeInput").value;
+    let score = 100;
+    let feedback = [];
+
+    if (/var\s/.test(code)) {
+      score -= 15;
+      feedback.push("Use let/const instead of var");
+    }
+
+    if (code.includes("==")) {
+      score -= 10;
+      feedback.push("Use === instead of ==");
+    }
+
+    if (!code.includes("function") && !code.includes("=>")) {
+      score -= 10;
+      feedback.push("Add modular functions");
+    }
+
+    let status =
+      score > 85 ? "Excellent 🟢" :
+      score > 60 ? "Good 🟡" :
+                   "Needs Improvement 🔴";
+
+    document.getElementById("output").innerHTML = `
+      <h3>🤖 AI Result</h3>
+      <h2>Score: ${score}/100</h2>
+      <p>${status}</p>
+      <ul>
+        ${feedback.map(f => `<li>${f}</li>`).join("")}
+      </ul>
+    `;
+
+    document.getElementById("loading").style.display = "none";
+
+  }, 2000);
+}
+
+/* CONTACT */
+function sendWhatsApp(){
+  let name = document.getElementById("userName").value;
+  let msg = document.getElementById("userMessage").value;
+
+  let url = "https://wa.me/201017528732?text=" + encodeURIComponent(name + "\n\n" + msg);
+  window.open(url,"_blank");
+}
+
+</script>
+
+</body>
+</html>
